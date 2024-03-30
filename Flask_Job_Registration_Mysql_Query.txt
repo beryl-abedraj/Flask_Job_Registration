@@ -1,0 +1,3 @@
+use python_db;
+CREATE TABLE candidates (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL,college VARCHAR(255),department VARCHAR(255), graduate_year INT, college_CGPA DECIMAL(3,2), tenth_percentage DECIMAL(5,2), twelfth_percentage DECIMAL(5,2), current_location VARCHAR(255), programming_languages VARCHAR(255), expected_salary DECIMAL(10, 2), upload_file BLOB);
+SELECT * FROM candidates;
