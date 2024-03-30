@@ -1,42 +1,38 @@
-from flask import Flask, render_template, request, redirect
-from flask_mysqldb import MySQL
-from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request, redirect                                                           # Importing all Flask's modules
+from flask_mysqldb import MySQL                                                                                       # Importing Flask MySQL
+from werkzeug.utils import secure_filename                                                                            
 import os
 
-app = Flask(__name__)
+app = Flask(__name__)                                                                                                 # Creating Flask instance with __name__ constructor
 
-# Secret Key
-app.secret_key = 'your_secret_key'
+app.secret_key = 'your_secret_key'                                                                                    # Creating secret key   
 
-# MySQL Configuration
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'localhost'                                                                                # Creating MySQL Configuration
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'python_db'
 
 mysql = MySQL(app)
 
-# Folder to store uploaded files
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'uploads'                                                                                             # Folder to store uploaded files
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Allowed file extensions
-ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}                                                                           # Allowed file extensions
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/')
+@app.route('/')                                                                                                       # Home page HTML Rendering
 def index():
     return render_template('home.html')
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])                                                                      # Registration HTML page rendering by POST and GET Request
 def register():
     if request.method == 'POST':
         name = request.form['name']
@@ -59,8 +55,7 @@ def register():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            # Store data in MySQL
-            cur = mysql.connection.cursor()
+            cur = mysql.connection.cursor()                                                                           # Store data in MySQL
             cur.execute(
                 "INSERT INTO candidates (name, email, college, department, graduate_year, college_CGPA, tenth_percentage, twelfth_percentage, current_location, programming_languages, expected_salary, upload_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (name, email, college, department, graduate_year, college_CGPA, tenth_percentage, twelfth_percentage,
@@ -74,7 +69,7 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/thankyou')
+@app.route('/thankyou')                                                                                               # Rendering Thank you HTML Page
 def thankyou():
     return render_template('thankyou.html')
 
